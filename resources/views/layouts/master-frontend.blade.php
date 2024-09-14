@@ -59,20 +59,11 @@
         <div class="content-wrapper">
             <div class="content-header row">
             </div>
-            <div class="content-body">
+            <div class="content-body" style="position: relative;">
                 @yield('content')
             </div>
         </div>
     </div>
-
-    <footer class="footer footer-static footer-light navbar-shadow">
-        <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2 container center-layout">
-            <span class="float-md-left d-block d-md-inline-block">
-                Copyright &copy; {{date("Y")}}, All rights reserved.
-            </span>
-            <span class="float-md-right d-block d-md-inline-block d-none d-lg-block">Developed By Moon Kabir</span>
-        </p>
-    </footer>
 
 
     <script src="{{url('app_assets')}}/vendors/js/vendors.min.js" type="text/javascript"></script>

@@ -6,79 +6,29 @@
         width: 100%;
     }
 </style>
-<h3>Google Maps Pump Locations</h3>
+<div style="position: absolute;top: 30%;left: 50%;z-index: 9999;transform: translate(-50%, -70%);color: #301616;font-weight: 700;">
+    <p style="font-size: 30px;">{{$data->name}}</p>
+    <span>{{$country}}</span> | <span>{{$data->latitude}}</span>, <span>{{$data->longitude}}</span>
+</div>
 <div id="map"></div>
 
 @endsection
 @section('footer_js')
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsmIxUdW_2FQ24Kl-ZhJ_oPyh0K422y0o&libraries=places"></script>
-<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     function initMap() {
+        var latitude = {{$data->latitude}};
+        var longitude = {{$data->longitude}};
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 5,
-            center: {lat: 28, lng: 90} // Center the map to a default location
+            zoom: 17,
+            center: {lat: latitude, lng: longitude},
         });
-
-        $.ajax({
-            url: "{{ url('map/map-data') }}",
-            method: 'POST',
-            dataType: 'json',
-            success: function(data) {
-                data.forEach(function(pump) {
-                    // var marker = new google.maps.Marker({
-                    //     position: {lat: parseFloat(pump.latitude), lng: parseFloat(pump.longitude)},
-                    //     map: map,
-                    //     title: pump.name,
-                    //     icon: "{{ url('app_assets') }}/images/dot.png",
-                    // });
-                    // var infowindow = new google.maps.InfoWindow({
-                    //     content: '<h3>' + pump.name + '</h3><a target="_blank" href= "{{ url('map/map-data') }}/' + pump.id + '">Full Report</a>'
-                    // });
-                    // marker.addListener('click', function() {
-                    //     infowindow.open(map, marker);
-                    // });
-
-
-                    var markers = data.map(function(pump) {
-                        var marker = new google.maps.Marker({
-                            position: {lat: parseFloat(pump.latitude), lng: parseFloat(pump.longitude)},
-                            title: pump.name,
-                            icon: "{{ url('app_assets') }}/images/dot.png",
-                        });
-                        var infowindow = new google.maps.InfoWindow({
-                            // content: '<h3>' + pump.name + '</h3><a target="_blank" href= "{{ url('map/map-data') }}/' + pump.id + '">Full Report</a>'
-                            content: `
-                                    <div>
-                                        <a target="_blank" href="{{ url('map/map-data') }}/` + pump.id + `">
-                                            <img src="{{ url('app_assets') }}/images/elements/15.png" alt="">
-                                            <div>
-                                                <h2>` + pump.name + `</h2>
-                                            </div>
-                                            <div>
-                                                <p>View Details</p>
-                                            </div>
-                                        </a>
-                                    </div>`
-                        });
-                        marker.addListener('click', function() {
-                            infowindow.open(map, marker);
-                        });
-                        return marker;
-                    });
-
-                    // Cluster the markers
-                    new markerClusterer.MarkerClusterer({ 
-                        map,
-                        markers,
-                        maxZoom: 15 // Below this zoom level, the markers will show individually
-                    });
-                });
-            }
+        var marker = new google.maps.Marker({
+            position: {lat: parseFloat(latitude), lng: parseFloat(longitude)},
+            map: map,
         });
     }
     google.maps.event.addDomListener(window, 'load', initMap);
 </script>
-
 @endsection

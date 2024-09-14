@@ -22,16 +22,13 @@ Route::get('/', function () {
 
 Route::get('/map/view', [MapController::class,'view']);
 Route::post('/map/map-data', [MapController::class,'mapData']);
-Route::get('/map/map-data/{$id}', [MapController::class,'viewDetails']);
-Route::post('/map/map-data/{$id}', [MapController::class,'viewDetailsData']);
+Route::get('/map/map-data/{id}', [MapController::class,'viewDetails']);
+
 
 Route::group(['middleware' => ['auth']], function () {
-
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-
-
     // Route::get('/map/config', [MapController::class,'Config']);
     Route::get('/map/admin', [MapController::class,'admin']);
     Route::post('/map/create', [MapController::class,'create']);
@@ -40,5 +37,4 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/map/delete/{id}', [MapController::class,'delete']);
     // Route::get('/map/fileEntry', [MapController::class, 'fileEntry']);
     // Route::Post('/map/file', [MapController::class, 'file']);
-
 });

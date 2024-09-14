@@ -133,15 +133,40 @@ class MapController extends Controller
     public function view(){
         return view('map.view');
     }
+    
     public function mapData(){
         $data = Map::all();
         return response($data);
     }
+
+
     public function viewDetails($id){
-        return view('map.view-details',compact('id'));
-    }
-    public function viewDetailsData($id){
         $data = Map::find($id);
-        return response($data);
+        $country = $this->getCountryName($data->latitude, $data->longitude, 'AIzaSyBsmIxUdW_2FQ24Kl-ZhJ_oPyh0K422y0o');
+        return view('map.view-details',compact('data', 'country'));
     }
+
+
+
+    function getCountryName($lat, $lon, $apiKey) {
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lon&key=$apiKey";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $data = json_decode($response, true);
+        if ($data['status'] === 'OK') {
+            foreach ($data['results'][0]['address_components'] as $component) {
+                if (in_array('country', $component['types'])) {
+                    return $component['long_name'];
+                }
+            }
+        }
+        return null;
+    }
+
 }
